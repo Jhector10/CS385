@@ -15,11 +15,8 @@ using namespace std;
 
 double sqrt(double num, double epsilon) {
 
-    double next_guess, last_guess;
-    last_guess = num;
-
-    cout << fixed;
-    cout << setprecision(8);
+    double last_guess = 1;
+    double next_guess = (last_guess + num / last_guess) / 2;
 
     if (num < 0) {
         return numeric_limits<double>::quiet_NaN();
@@ -29,7 +26,8 @@ double sqrt(double num, double epsilon) {
         return num == 0 ? 0 : 1;
     }
 
-    while (abs(last_guess - next_guess) <= epsilon) {
+    while (abs(last_guess - next_guess) >= epsilon) {
+        last_guess = next_guess;
         next_guess = (last_guess + num / last_guess) / 2;
     }
 
@@ -40,42 +38,36 @@ int main (int argc, char* argv[]) {
     // argc is the number of command line arguments (../maxtwo 27 53 = 3)
     // argv is an array (argv[0] = ../maxtwo, argv[1] = String(27), argv[2] = String(53))
 
-    float n, m;
+    double n, m;
     istringstream iss; // input string stream
 
-    if(argc > 3) {
+    cout << fixed;
+    cout << setprecision(8);
+
+    if(argc < 2 || argc > 3) {
         // user gave the wrong number of command line arguments
-        cerr << "Usage: " << argv[0] << " <double num> <double epsilon>" << endl;
-        return 1; // 1 means that something went wrong in the program
-
-        // cout means a print message out for the user
-        // cerr means an error message out for the user (takes priority)
-    }
-
-    // change the string into an integer
-    
-    iss.str(argv[1]); // initialize iss to read from argv[1]
-    if (!(iss >> n)) { // now we actually read it, and place it into n
-        cerr << "first command line argument must an integer" << endl;
+        cerr << "Usage: " << argv[0] << " <value> [epsilon]" << endl;
         return 1;
-    }
+    } else {
+        // if there is no epsilon argument
+        iss.str(argv[1]); // initialize iss to read from argv[1]
+        if (!(iss >> n)) { // now we actually read it, and place it into n
+            cerr << "Error: Value argument must be a double." << endl;
+            return 1;
+        } 
 
-    iss.clear(); // always reset before you read another stream
+        if (argc == 2) {
+            cout << sqrt(n, 0.0000001) << endl;
+        }
 
-    iss.str(argv[2]); 
-    if (!(iss >> m)) { 
-        cerr << "second command line argument must an integer" << endl;
-        return 1;
-    }
-
-    cout << "n is: " << n << endl;
-    cout << "m is: " << m << endl;
-    
-    cout << "max(" << n << ", " << m << ") is: " << max(n, m) << endl;
-
-    // compute square root 
-
-    // nextGuess = (lastGuess + n / lastGuess) / 2
-
-    return 0;
+        iss.clear(); 
+        if (argc == 3) {
+            iss.str(argv[2]);
+            if (!(iss >> m) || m <= 0) {
+                cerr << "Error: Epsilon argument must be a positive double." << endl;
+                return 1;
+            }
+            cout << sqrt(n, m) << endl;
+        }  
+    }     
 }

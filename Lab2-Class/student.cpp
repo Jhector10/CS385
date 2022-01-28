@@ -12,27 +12,52 @@
 #include <vector>
 using namespace std;
 
-
 class Student {
+
 public:
 	// Constructor that uses an initializer list.
-	Student(string first_, string last_, float gpa_, int id_) : first{first_}, last{last_}, gpa{gpa_}, id(id_) { }
+	Student(string first, string last, float gpa, int id) : first_{first}, last_{last}, gpa_{gpa}, id_{id} { }
 
 	// Methods that do not modify member variables should be declared const.
-	void print_coords() const {
-		cout << "(x, y, z) = (" << x_ << ", " << y_ << ", " << fixed
-			 << setprecision(2) << z_ << ")" << endl;
+	void print_info() const {
+		cout << full_name() << ", GPA: " << fixed
+			 << setprecision(2) << get_gpa() << ", ID: " << get_id() << endl;
 	}
 
-    /**
+	// Accessor (getter), declared const.
+	string full_name() const {
+		return first_ + " " + last_;
+	}
+
+    float get_gpa() const {
+        return gpa_;
+    }
+
+    int get_id() const {
+        return id_;
+    }
+
+private:
+	// Member variables (fields). Use the trailing _ for these variables.
+	string first_, last_;
+    float gpa_;
+    int id_;
+}; // semicolon is required!
+
+/**
     * Takes a vector of Student objects, and returns a new vector
     * with all Students whose GPA is < 1.0.
     */
     vector<Student> find_failing_students(const vector<Student> &students) {
-    vector<Student> failing_students;
-    // Iterates through the students vector, appending each student whose gpa is
-    // less than 1.0 to the failing_students vector.
-    return failing_students;
+        vector<Student> failing_students;
+        // Iterates through the students vector, appending each student whose gpa is
+        // less than 1.0 to the failing_students vector.
+        for(size_t i = 0; i < students.size(); i++) {
+            if (students[i].get_gpa() < 1.0) {
+                failing_students.push_back(students[i]);
+            }
+        }
+        return failing_students;
     }
 
     /**
@@ -40,38 +65,10 @@ public:
     */
     void print_students(const vector<Student> &students) {
     // Iterates through the students vector, calling print_info() for each student.
+        for(size_t i = 0; i < students.size(); i++) {
+            students[i].print_info();
+        }
     }
-
-	// Mutator (setter).
-	void set_x(int x) {
-		x_ = x;
-	}
-
-	// Accessor (getter), declared const.
-	int get_x() const {
-		return x_;
-	}
-
-private:
-	// Member variables (fields). Use the trailing _ for these variables.
-	string first_, last_;
-    int id_;
-	float gpa_;
-}; // semicolon is required!
-
-// Pass by reference, and using an iterator (which is an object
-// that can be used essentially as if it were a pointer):
-void display_points(const vector<Student> &students) {
-	for(auto it = points.cbegin(); it != points.cend(); it++) {
-		it->print_coords(); // Same as: (*it).print_coords();
-	}
-}
-
-void display_points_v2(const vector<MyPoint> &points) {
-	for(size_t i = 0; i < points.size(); i++) {
-		points[i].print_coords();
-	}
-}
 
 /**
 * Allows the user to enter information for multiple students, then
@@ -103,16 +100,15 @@ int main() {
 
     cout << endl << "All students:" << endl;
     print_students(students);
-    cout << endl << "Failing students:";
+    cout << endl;
+    cout << "Failing students:";
 
-    if (students.size() == 0) {
-        cout << "None" << endl;
+    if (find_failing_students(students).empty()) {
+        cout << " None" << endl;
     } else {
+        cout << endl; 
         print_students(find_failing_students(students));
     }
 
-    // TODO
-    // Print a space and the word 'None' on the same line if no students are failing.
-    // Otherwise, print each failing student on a separate line.
     return 0;
 }

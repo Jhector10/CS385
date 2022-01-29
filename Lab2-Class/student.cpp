@@ -21,7 +21,7 @@ public:
 	// Methods that do not modify member variables should be declared const.
 	void print_info() const {
 		cout << full_name() << ", GPA: " << fixed
-			 << setprecision(2) << get_gpa() << ", ID: " << get_id() << endl;
+			 << setprecision(2) << gpa() << ", ID: " << id() << endl;
 	}
 
 	// Accessor (getter), declared const.
@@ -29,11 +29,11 @@ public:
 		return first_ + " " + last_;
 	}
 
-    float get_gpa() const {
+    float gpa() const {
         return gpa_;
     }
 
-    int get_id() const {
+    int id() const {
         return id_;
     }
 

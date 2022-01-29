@@ -53,7 +53,7 @@ private:
         // Iterates through the students vector, appending each student whose gpa is
         // less than 1.0 to the failing_students vector.
         for(size_t i = 0; i < students.size(); i++) {
-            if (students[i].get_gpa() < 1.0) {
+            if (students[i].gpa() < 1.0) {
                 failing_students.push_back(students[i]);
             }
         }

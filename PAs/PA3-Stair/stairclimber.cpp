@@ -21,12 +21,12 @@ vector<vector<int> > get_ways(int num_stairs) {
     vector<vector<int> > ways;
     vector<vector<int> > path;
 
-    if (num_stairs <= 0) {
+    if (num_stairs < 1) { // if num_stairs is 0, send empty array and return the array
         ways.push_back(vector<int>());
     } else {
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i < 4; i++) { // iterate for the 1, 2, or 3 stairs at a time
             if (num_stairs >= i) {
-                path = get_ways(num_stairs - 1);
+                path = get_ways(num_stairs - i); // recursively 
                 for (size_t j = 0; j < path.size(); j++) {
                     path[j].insert(path[j].begin(), i);
                 }
@@ -36,11 +36,11 @@ vector<vector<int> > get_ways(int num_stairs) {
     }
 
     return ways;
-
 }
 
 int num_digits(size_t num) {
     // Helper from Sieve hw: write code to determine how many digits are in an integer
+    // This can help with displaying for display_ways
     int digits = 0;
 
     while(num != 0) {
@@ -57,13 +57,15 @@ void display_ways(const vector< vector<int> > &ways) {
 
     size_t width = ways.size();
     int digits = num_digits(width);
+    // determine how many spaces is needed for the list
 
-    for(size_t i = 0; i < ways.size(); i++) {
-        cout << setw(digits) << (i + 1) << ". [";
-        for (size_t j = 0; j < ways[i].size(); j++) {
-            if (j == ways[i].size() - 1) {
+    for(size_t i = 0; i < ways.size(); i++) { // iterate through each way to go up stairs
+        cout << setw(digits) << (i + 1) << ". ["; // set the space needed before displaying
+        for (size_t j = 0; j < ways[i].size(); j++) { // iterate through the way of getting up the stairs
+            if (j == ways[i].size() - 1) { 
+                // if you are at the end of the list, print the number with the "]", and go to next line
                 cout << ways[i][j] << "]" << endl;;
-            } else {
+            } else { // if you are not done, continue printing numbers
                 cout << ways[i][j] << ", ";
             }
         }
@@ -82,7 +84,7 @@ int main(int argc, char * const argv[]) {
         return 1;
     } 
 
-    // Use stringstream for conversion. Don't forget to #include <sstream>
+    // Use stringstream for conversion
     istringstream iss(argv[1]);
 
     // Check for error.
@@ -99,7 +101,7 @@ int main(int argc, char * const argv[]) {
     	cout << ways.size() << " ways to climb " << numberOfStairs << " stairs." << endl;
     }
 
-    display_ways(get_ways(numberOfStairs));
+    display_ways(ways);
     return 0;
 
 }
